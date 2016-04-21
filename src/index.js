@@ -313,7 +313,9 @@ const poker = React.createClass({
             <div>
                 <div className="container">
                     <div className="title">
-                        <h1 className="ui center aligned header">Poker Game</h1>
+                        <h1 className="ui center aligned header">Poker Game
+                            <div className="sub header">Thanks to <a target="_blank" href="https://facebook.github.io/react/">React</a> and <a target="_blank" href="http://semantic-ui.com/">Semantic-UI</a></div>
+                        </h1>
                     </div>
                     <div className="left">
                         <div className="ui vertical menu">
