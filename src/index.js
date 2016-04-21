@@ -312,6 +312,9 @@ const poker = React.createClass({
         return(
             <div>
                 <div className="container">
+                    <div className="title">
+                        <h1 className="ui center aligned header">Poker Game</h1>
+                    </div>
                     <div className="left">
                         <div className="ui vertical menu">
                             <div className={`item ${state.times === 250 ? 'blink' : ''}`}>同花顺<div className="ui teal label">250</div></div>
