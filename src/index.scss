@@ -1,0 +1,165 @@
+*{
+    box-sizing : border-box;
+}
+.container{
+    width: 100%;
+    max-width: 800px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform : translate(-50%, -50%);
+    border: 1px solid #f1f1f1;
+    padding: 5px 0;
+    display: flex;
+    flex-wrap: wrap;
+    .left{
+        display: flex;
+        flex : 20%;
+        min-height: 300px;
+        padding: 5px;
+        border-right: 1px dotted #eee;
+        .ui.menu{
+            display: flex;
+            width: 100%;
+            flex-direction : column;
+            justify-content: space-around;
+            border: 0 none;
+            box-shadow: none;
+            .item{
+                padding-left: 5px;
+                padding-right: 5px;
+                &:before{
+                    display: none;
+                }
+                &.blink{
+                    animation: blink .8s Infinite;
+                }
+            }
+        }
+    }
+    .right{
+        display: flex;
+        flex : 80%;
+        flex-direction: column;
+        min-height: 300px;
+        padding: 5px;
+        .top{
+            display: flex;
+            .ui.tiny.statistic{
+                margin: 6px 0 0;
+            }
+        }
+        .middle{
+            display: flex;
+            flex: 60%;
+            justify-content : space-around;
+            align-items: center;
+            margin: 10px 0;
+            border-top: 1px dotted #eee;
+            border-bottom: 1px dotted #eee;
+            .card{
+                cursor: pointer;
+                width : 100px;
+                height : 139px;
+                margin: 5px;
+                border-radius: 9px;
+                position: relative;
+                &.hold{
+                    box-shadow: -4px -4px 10px #f11 inset;
+                    &:after{
+                        content : "hold";
+                        width: 100px;
+                        height: 139px;
+                        z-index: 1;
+                        background: rgba(0, 0, 0, 0.1);
+                        color: red;
+                        position: absolute;
+                        left: 0;
+                        top: 0;
+                        line-height: 139px;
+                        text-align: center;
+                        font-size: 36px;
+                    }
+                }
+            }
+        }
+        .bottom{
+            display: flex;
+        }
+        .ui.form{
+            width: 100%;
+            .right-area{
+                text-align: right;
+            }
+            .random-area{
+                line-height: 40px;
+                .random-number{
+                    margin-right: 20px;
+                    display: inline-block;
+                    width: 50px;
+                    text-align: center;
+                }
+                .random-result{
+                    color : #21BA45;
+                    &.lose{
+                        color: #CC181E;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.p-1{ background-position: 0 0; }
+.p-2{ background-position: -112px 0; }
+.p-3{ background-position: -225px 0; }
+.p-4{ background-position: -338px 0; }
+.p-5{ background-position: -450px 0; }
+.p-6{ background-position: 0 -147px; }
+.p-7{ background-position: -112px -147px; }
+.p-8{ background-position: -225px -147px; }
+.p-9{ background-position: -338px -147px; }
+.p-10{ background-position: -450px -147px; }
+.p-11{ background-position: 0 -295px; }
+.p-12{ background-position: -112px -295px; }
+.p-13{ background-position: -225px -295px; }
+.back{ background-position: -450px -295px; }
+
+@keyframes blink{
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0.05;
+    }
+}
+
+.ui.dimmer.modals{
+    .ui.small.modal{
+        transform : translate(0, -50%);
+    }
+    &.help-appear{
+        .ui.small.modal{
+            transform : scale(0.1) translate(0, -50%);
+        }
+    }
+    &.help-appear-active{
+        .ui.small.modal{
+            transform : scale(1) translate(0, -50%);
+            transition : transform 0.3s cubic-bezier(0.68, 0, 0.27, 1.55) 0s;
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

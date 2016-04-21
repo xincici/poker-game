@@ -1,0 +1,35 @@
+{
+  "name": "poker",
+  "version": "0.0.1",
+  "description": "a poker game",
+  "main": "src/index.js",
+  "repository": "",
+  "scripts": {},
+  "dependencies": {
+    "lodash": "^4.0.1",
+    "promise": "^7.1.1",
+    "react": "^0.14.6",
+    "react-dom": "^0.14.6",
+    "react-addons-css-transition-group": "^0.14.6",
+    "reset.css": "^2.0.2",
+    "semantic-ui": "^2.1.8"
+  },
+  "devDependencies": {
+    "babelify": "^6.1.2",
+    "browserify": "^8.0.2",
+    "browserify-shim": "^3.8.0",
+    "gulp": "^3.6.0",
+    "gulp-cache": "^0.4.4",
+    "gulp-imagemin": "^2.4.0",
+    "gulp-load-plugins": "~0.7.0",
+    "gulp-webserver": "latest",
+    "scssify": "^0.3.8",
+    "vinyl-transform": "^1.0.0"
+  },
+  "browserify": {
+    "transform": [
+      "babelify",
+      "scssify"
+    ]
+  }
+}
