@@ -18,7 +18,7 @@ const ARR = [
     'c-1','c-2','c-3','c-4','c-5','c-6','c-7','c-8','c-9','c-10','c-11','c-12','c-13',
     'd-1','d-2','d-3','d-4','d-5','d-6','d-7','d-8','d-9','d-10','d-11','d-12','d-13'
 ];
-const poker = React.createClass({
+const Poker = React.createClass({
     getInitialState() {
         const str = localStorage.getItem('poker');
         let json = {};
@@ -449,5 +449,5 @@ const poker = React.createClass({
     }
 });
 
-export default poker;
+export default Poker
 

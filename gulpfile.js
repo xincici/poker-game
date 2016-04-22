@@ -8,7 +8,7 @@ var browserify = require('browserify');
 var transform = require('vinyl-transform');
 
 // Scripts
-gulp.task('js:dev', function () {
+gulp.task('js', function () {
     var browserified = transform(function (filename) {
         var b = browserify(filename, {debug: true});
         return b.bundle();
@@ -19,6 +19,9 @@ gulp.task('js:dev', function () {
     });
     return gulp.src('main.js')
         .pipe(browserified)
+        .pipe($.sourcemaps.init())
+        .pipe($.uglify())
+        .pipe($.sourcemaps.write('./'))
         .pipe(gulp.dest('dist/'));
 });
 
@@ -43,11 +46,11 @@ gulp.task('serve', function () {
         }));
 });
 // Watch
-gulp.task('watch', ['js:dev', 'img'], function () {
-    gulp.watch(['src/**/*.js', 'src/**/*.scss', 'main.js'], ['js:dev']);
+gulp.task('watch', ['js', 'img'], function () {
+    gulp.watch(['src/**/*.js', 'src/**/*.scss', 'main.js'], ['js']);
     gulp.watch(['src/img/**'], ['img']);
 });
 
 gulp.task('dev', ['watch', 'serve']);
 // Default task
-gulp.task('default', ['js:dev']);
+gulp.task('default', ['js']);
