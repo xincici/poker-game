@@ -12,7 +12,7 @@ function numToStr(num){
     return num.toString().replace(/(\d{1,3})(?=(?:\d{3})+(?!\d))/g,'$1,');
 }
 const A = [0, 1, 2, 3, 4];
-const ARR = [
+const ALLCARDS = [
     'a-1','a-2','a-3','a-4','a-5','a-6','a-7','a-8','a-9','a-10','a-11','a-12','a-13',
     'b-1','b-2','b-3','b-4','b-5','b-6','b-7','b-8','b-9','b-10','b-11','b-12','b-13',
     'c-1','c-2','c-3','c-4','c-5','c-6','c-7','c-8','c-9','c-10','c-11','c-12','c-13',
@@ -137,7 +137,7 @@ const Poker = React.createClass({
                     win : 0,
                     waiting : false
                 }, function(){
-                    this.resetState();
+                    this.resetOneCard(0);
                 });
             }.bind(this), 1200);
         });
@@ -176,6 +176,18 @@ const Poker = React.createClass({
     dealCards() {
         this.dealOneCard(0);
     },
+    resetOneCard(index) {
+        if(index >= 5){
+            this.resetState();
+            return;
+        }
+        setTimeout(function(){
+            this.setState({
+                cards : [...this.state.cards.slice(0, index), '', ...this.state.cards.slice(index + 1)]
+            });
+            this.resetOneCard(++index);
+        }.bind(this), 250);
+    },
     dealOneCard(index) {
         if(index >= 5){
             this.setState({
@@ -192,10 +204,12 @@ const Poker = React.createClass({
                                 setTimeout(function(){
                                     this.setState({
                                         text : null
-                                    }, this.resetState);
-                                }.bind(this), 1500)
+                                    }, function(){
+                                        this.resetOneCard(0);
+                                    });
+                                }.bind(this), 1200);
                             });
-                        }.bind(this), 1500);
+                        }.bind(this), 1200);
                     }else{
                         this.setState({
                             text : 'You Win!!!',
@@ -207,7 +221,7 @@ const Poker = React.createClass({
                                 this.setState({
                                     text : null
                                 });
-                            }.bind(this), 1500)
+                            }.bind(this), 1200);
                         });
                     }
                 }
@@ -224,64 +238,41 @@ const Poker = React.createClass({
                 cards : [...this.state.cards.slice(0, index), card, ...this.state.cards.slice(index + 1)]
             });
             this.dealOneCard(++index);
-        }.bind(this), 200);
+        }.bind(this), 250);
     },
     getOneShuffleCard() {
         let ran = parseInt(Math.floor(Math.random() * 51));
-        while(this.state.cards.indexOf(ARR[ran]) >= 0){
+        while(this.state.cards.indexOf(ALLCARDS[ran]) >= 0){
             ran = parseInt(Math.floor(Math.random() * 51));
         }
-        return ARR[ran];
+        return ALLCARDS[ran];
     },
     gameResult() {
-        let type = [];
-        let number = [];
+        let ts = [];
+        let ns = [];
         let card, cArr;
         A.forEach(function(i){
             card = this.state.cards[i];
             cArr = card.split('-');
-            type.push(cArr[0]);
-            number.push(parseInt(cArr[1]));
+            ts.push(cArr[0]);
+            ns.push(parseInt(cArr[1]));
         }.bind(this));
-        number.sort(function(a, b){
+        ns.sort(function(a, b){
             return a - b;
         });
-        if(type[0] == type[1] && type[0] == type[2] && type[0] == type[3] && type[0] == type[4]){
-            //同花顺
-            if(number[4] - number[0] == 4){
-                return 250;
-            }
-            //同花
-            return 7;
+        if(ts[0] == ts[1] && ts[0] == ts[2] && ts[0] == ts[3] && ts[0] == ts[4]){
+            if(ns[4] - ns[0] == 4) return 250; //同花顺
+            return 7; //同花
         }
-        if(number[0] != number[1] && number[1] != number[2] && number[2] != number[3] && number[3] != number[4]){
-            //顺子
-            if((number[4] - number[0] == 4) || (number[0] == 1 && number[1] == 10)){
-                return 10;
-            }
-            //什么也不是
-            return 0;
+        if(ns[0] != ns[1] && ns[1] != ns[2] && ns[2] != ns[3] && ns[3] != ns[4]){
+            if((ns[4] - ns[0] == 4) || (ns[0] == 1 && ns[1] == 10)) return 10; //顺子
+            return 0; //什么也不是
         }
-        //四条
-        if(number[0] == number[3] || number[1] == number[4]){
-            return 60;
-        }
-        //葫芦
-        if((number[0] == number[2] && number[3] == number[4]) || (number[0] == number[1] && number[2] == number[4])){
-            return 20;
-        }
-        //三条
-        if(number[0] == number[2] || number[1] == number[3] || number[2] == number[4]){
-            return 5;
-        }
-        //两对
-        if((number[0] == number[1] && (number[2] == number[3] || number[3] == number[4])) || (number[1] == number[2] && number[3] == number[4])){
-            return 2;
-        }
-        //大于8一对
-        if((number[1] == 1) || (number[0] == number[1] && number[0] >= 8) || (number[1] == number[2] && number[1] >= 8) || (number[2] == number[3] && number[2] >= 8) || (number[3] == number[4] && number[3] >= 8)){
-            return 1;
-        }
+        if(ns[0] == ns[3] || ns[1] == ns[4]) return 60; //四条
+        if((ns[0] == ns[2] && ns[3] == ns[4]) || (ns[0] == ns[1] && ns[2] == ns[4])) return 20; //葫芦
+        if(ns[0] == ns[2] || ns[1] == ns[3] || ns[2] == ns[4]) return 5; //三条
+        if((ns[0] == ns[1] && (ns[2] == ns[3] || ns[3] == ns[4])) || (ns[1] == ns[2] && ns[3] == ns[4])) return 2; //两对
+        if((ns[1] == 1) || (ns[0] == ns[1] && ns[0] >= 8) || (ns[1] == ns[2] && ns[1] >= 8) || (ns[2] == ns[3] && ns[2] >= 8) || (ns[3] == ns[4] && ns[3] >= 8)) return 1; //大于8一对
         return 0;
     },
     render() {
