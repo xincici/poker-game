@@ -59,10 +59,14 @@ const Poker = React.createClass({
         });
         localStorage.setItem('poker', str);
     },
-    resetState() {
+    winMoney() {
         this.setState({
             total : this.state.total + this.state.win,
-            win : 0,
+            win : 0
+        }, () => this.resetOneCard(0));
+    },
+    resetState() {
+        this.setState({
             dealing : false,
             cards : ['', '', '', '', ''],
             holds : [false, false, false, false, false],
@@ -182,8 +186,10 @@ const Poker = React.createClass({
             return;
         }
         setTimeout(function(){
+            let {cards, holds} = this.state;
             this.setState({
-                cards : [...this.state.cards.slice(0, index), '', ...this.state.cards.slice(index + 1)]
+                cards : [...cards.slice(0, index), '', ...cards.slice(index + 1)],
+                holds : [...holds.slice(0, index), false, ...holds.slice(index + 1)]
             });
             this.resetOneCard(++index);
         }.bind(this), 250);
@@ -399,7 +405,7 @@ const Poker = React.createClass({
                                             <button
                                                 className="ui red button"
                                                 disabled={state.win === 0}
-                                                onClick={this.resetState}
+                                                onClick={this.winMoney}
                                             >Check</button>
                                             <div className="or"></div>
                                             <button className="ui green button"
@@ -425,6 +431,7 @@ const Poker = React.createClass({
                                     <div className="ui list">
                                         <div className="item"><i className="info circle icon olive"></i><div className="content">投注范围 1-100</div></div>
                                         <div className="item"><i className="info circle icon olive"></i><div className="content">牌型对应倍数见左侧栏</div></div>
+                                        <div className="item"><i className="info circle icon olive"></i><div className="content">猜大小数字范围 1、2、3 为小，4、5、6 为大</div></div>
                                     </div>
                                 </div>
                                 <div className="actions">
