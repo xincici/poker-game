@@ -21,13 +21,25 @@ const ALLCARDS = [
 const Poker = React.createClass({
     getInitialState() {
         const str = localStorage.getItem('poker');
-        let json = {};
+        let json;
         if(str){
-            json = JSON.parse(str);
+            try{
+                json = JSON.parse(str);
+            }catch(e){
+                json = {
+                    total : 1000,
+                    bet : 10
+                }
+            }
+        }else{
+            json = {
+                total : 1000,
+                bet : 10
+            }
         }
         return{
-            total : json.total || 1000,
-            bet : json.bet || 10,
+            total : json.total,
+            bet : json.bet,
             win : 0,
             dealing : false,
             cards : ['', '', '', '', ''],
@@ -39,7 +51,30 @@ const Poker = React.createClass({
             random : 0,
             randomResult : '',
             waiting : false,
-            help : false
+            help : !str,
+            inputText : '',
+            runOut : json.total < json.bet
+        }
+    },
+    inputTextChange(e) {
+        let inputText = e.target.value;
+        this.setState({
+            inputText
+        });
+    },
+    hideInput() {
+        this.setState({
+            inputText : '',
+            runOut : false,
+            total : 1000,
+            bet : 10
+        }, this.persistData);
+    },
+    checkRunOut() {
+        if(this.state.total < this.state.bet){
+            this.setState({
+                runOut : true
+            });
         }
     },
     showHelp() {
@@ -141,6 +176,7 @@ const Poker = React.createClass({
                     win : 0,
                     waiting : false
                 }, function(){
+                    this.checkRunOut();
                     this.resetOneCard(0);
                 });
             }.bind(this), 1200);
@@ -211,6 +247,7 @@ const Poker = React.createClass({
                                     this.setState({
                                         text : null
                                     }, function(){
+                                        this.checkRunOut();
                                         this.resetOneCard(0);
                                     });
                                 }.bind(this), 1200);
@@ -427,15 +464,39 @@ const Poker = React.createClass({
                             <div className="ui small basic modal active">
                                 <div className="ui icon header orange"><i className="help circle icon"></i> 游戏规则 </div>
                                 <div className="content">
-                                    <p>点击 Roll 按钮发牌，第一次发牌后点击牌可以选择保留该牌，再次点击该按钮会替换掉未被保留的牌，形成最终牌型，当有四条，或同花，或葫芦，或顺子，或三条，或两对，或大于一对8的牌型时胜利，可选择继续猜大小，猜对则奖金加倍，猜错则奖金清零，也可以随时选择结算奖金。</p>
+                                    <p>点击 Roll 按钮发牌，第一次发牌后点击牌可以选择保留该牌，再次点击该按钮会替换掉未被保留的牌，形成最终牌型，当有四条，或同花，或葫芦，或顺子，或三条，或两对，或大于一对8的牌型时胜利，可选择继续猜大小，猜对则奖金加倍，猜错则奖金清零，也可以随时点击 Check 按钮结算奖金。</p>
                                     <div className="ui list">
                                         <div className="item"><i className="info circle icon olive"></i><div className="content">投注范围 1-100</div></div>
                                         <div className="item"><i className="info circle icon olive"></i><div className="content">牌型对应倍数见左侧栏</div></div>
-                                        <div className="item"><i className="info circle icon olive"></i><div className="content">猜大小数字范围 1、2、3 为小，4、5、6 为大</div></div>
+                                        <div className="item"><i className="info circle icon olive"></i><div className="content">猜大小数字 1、2、3 为小，4、5、6 为大</div></div>
                                     </div>
                                 </div>
                                 <div className="actions">
                                   <div className="ui green ok inverted button" onClick={this.hideHelp}><i className="checkmark icon"></i> OK, I See </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ReactCSSTransitionGroup>
+                    :null
+                }
+                {state.runOut ?
+                    <ReactCSSTransitionGroup transitionName="help" transitionAppear={true} transitionAppearTimeout={500} transitionEnter={false} transitionLeave={false}>
+                        <div className="ui dimmer modals page active">
+                            <div className="ui small basic modal active">
+                                <div className="ui icon header red"><i className="warning circle icon"></i> 胜败乃兵家常事，大侠请重新来过 </div>
+                                <div className="content">
+                                    <p>没钱了，看起来运气不太好啊。在下边的框里输入『作者真帅』重新来过吧！</p>
+                                    <div className="ui form">
+                                        <div className="field">
+                                            <input type="text" placeholder="" value={state.inputText || ''} onChange={this.inputTextChange} />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="actions">
+                                    <button
+                                        className="ui green ok inverted button"
+                                        onClick={this.hideInput}
+                                        disabled={state.inputText !== '作者真帅'}><i className="checkmark icon"></i> Fight Again </button>
                                 </div>
                             </div>
                         </div>
