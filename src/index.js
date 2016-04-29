@@ -18,10 +18,10 @@ const ALLCARDS = [
     'c-1','c-2','c-3','c-4','c-5','c-6','c-7','c-8','c-9','c-10','c-11','c-12','c-13',
     'd-1','d-2','d-3','d-4','d-5','d-6','d-7','d-8','d-9','d-10','d-11','d-12','d-13'
 ];
-const lsKey = '__poker__storage';
+const LSKEY = '__poker__storage';
 const Poker = React.createClass({
     getInitialState() {
-        const str = localStorage.getItem(lsKey);
+        const str = localStorage.getItem(LSKEY);
         let json;
         if(str){
             try{
@@ -56,6 +56,16 @@ const Poker = React.createClass({
             inputText : '',
             runOut : json.total < json.bet
         }
+    },
+    componentWillMount() {
+        this.preLoadImages();
+    },
+    preLoadImages() {
+        let images = ['./img/heitao.jpg', './img/hongtao.jpg', './img/meihua.jpg', './img/fangkuai.jpg'];
+        images.forEach((url) => {
+            let img = new Image();
+            img.src = url;
+        });
     },
     inputTextChange(e) {
         let inputText = e.target.value;
@@ -93,7 +103,7 @@ const Poker = React.createClass({
             total : this.state.total,
             bet : this.state.bet
         });
-        localStorage.setItem(lsKey, str);
+        localStorage.setItem(LSKEY, str);
     },
     winMoney() {
         this.setState({
