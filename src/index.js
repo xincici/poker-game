@@ -123,7 +123,7 @@ const Poker = React.createClass({
             random : 0,
             randomResult : '',
             waiting : false
-        }, function(){
+        }, () => {
             this.persistData();
             this.clearTimer();
         });
@@ -138,12 +138,12 @@ const Poker = React.createClass({
         });
     },
     startRandom() {
-        this.timer = setInterval(function(){
+        this.timer = setInterval(() => {
             let random = Math.ceil(Math.random() * 6);
             this.setState({
                 random
             });
-        }.bind(this), 125);
+        }, 125);
     },
     randomGuessBig() {
         if(this.state.random >= 4){
@@ -165,14 +165,14 @@ const Poker = React.createClass({
             randomResult : 'Win',
             win : this.state.win * 2,
             waiting : true
-        }, function(){
-            setTimeout(function(){
+        }, () => {
+            setTimeout(() => {
                 this.startRandom();
                 this.setState({
                     randomResult : '',
                     waiting : false
                 });
-            }.bind(this), 1000);
+            }, 1000);
         });
     },
     randomLose() {
@@ -180,17 +180,17 @@ const Poker = React.createClass({
         this.setState({
             randomResult : 'Lose',
             waiting : true
-        }, function(){
-            setTimeout(function(){
+        }, () => {
+            setTimeout(() => {
                 this.clearRandom();
                 this.setState({
                     win : 0,
                     waiting : false
-                }, function(){
+                }, () => {
                     this.checkRunOut();
                     this.resetOneCard(0);
                 });
-            }.bind(this), 1200);
+            }, 1200);
         });
     },
     betMinus() {
@@ -232,50 +232,50 @@ const Poker = React.createClass({
             this.resetState();
             return;
         }
-        setTimeout(function(){
+        setTimeout(() => {
             let {cards, holds} = this.state;
             this.setState({
                 cards : [...cards.slice(0, index), '', ...cards.slice(index + 1)],
                 holds : [...holds.slice(0, index), false, ...holds.slice(index + 1)]
             });
             this.resetOneCard(++index);
-        }.bind(this), 250);
+        }, 250);
     },
     dealOneCard(index) {
         if(index >= 5){
             this.setState({
                 step : ++this.state.step,
                 dealing : false
-            }, function(){
+            }, () => {
                 if(this.state.step === 4){
                     let times = this.gameResult();
                     if(times === 0){
-                        setTimeout(function(){
+                        setTimeout(() => {
                             this.setState({
                                 text : 'You Lose!!!'
-                            }, function(){
-                                setTimeout(function(){
+                            }, () => {
+                                setTimeout(() => {
                                     this.setState({
                                         text : null
-                                    }, function(){
+                                    }, () => {
                                         this.checkRunOut();
                                         this.resetOneCard(0);
                                     });
-                                }.bind(this), 1200);
+                                }, 1200);
                             });
-                        }.bind(this), 1200);
+                        }, 1200);
                     }else{
                         this.setState({
                             text : 'You Win!!!',
                             win : this.state.bet * times,
                             times : times
-                        }, function(){
+                        }, () => {
                             this.startRandom();
-                            setTimeout(function(){
+                            setTimeout(() => {
                                 this.setState({
                                     text : null
                                 });
-                            }.bind(this), 1200);
+                            }, 1200);
                         });
                     }
                 }
@@ -286,13 +286,13 @@ const Poker = React.createClass({
             this.dealOneCard(++index);
             return
         }
-        setTimeout(function(){
+        setTimeout(() => {
             let card = this.getOneShuffleCard();
             this.setState({
                 cards : [...this.state.cards.slice(0, index), card, ...this.state.cards.slice(index + 1)]
             });
             this.dealOneCard(++index);
-        }.bind(this), 250);
+        }, 250);
     },
     getOneShuffleCard() {
         let ran = parseInt(Math.floor(Math.random() * 51));
@@ -305,13 +305,13 @@ const Poker = React.createClass({
         let ts = [];
         let ns = [];
         let card, cArr;
-        A.forEach(function(i){
+        A.forEach((i) => {
             card = this.state.cards[i];
             cArr = card.split('-');
             ts.push(cArr[0]);
             ns.push(parseInt(cArr[1]));
-        }.bind(this));
-        ns.sort(function(a, b){
+        });
+        ns.sort((a, b) => {
             return a - b;
         });
         if(ts[0] == ts[1] && ts[0] == ts[2] && ts[0] == ts[3] && ts[0] == ts[4]){
@@ -332,7 +332,7 @@ const Poker = React.createClass({
     render() {
         const state = this.state;
         let cardsArr = [];
-        A.forEach(function(index){
+        A.forEach((index) => {
             let card = state.cards[index];
             if(card){
                 let r = card.split('-');
@@ -341,7 +341,7 @@ const Poker = React.createClass({
                     <div
                         key={index}
                         className={`card ${c} ${state.holds[index]? 'hold' : ''}`}
-                        onClick={this.toggleHold.bind(this, index)}
+                        onClick={() => this.toggleHold(index)}
                     ></div>
                 )
             }else{
@@ -349,20 +349,20 @@ const Poker = React.createClass({
                     <div
                         key={index}
                         className={`card back ${state.holds[index]? 'hold' : ''}`}
-                        onClick={this.toggleHold.bind(this, index)}
+                        onClick={() => this.toggleHold(index)}
                     ></div>
                 )
             }
-        }.bind(this));
+        });
         return(
             <div>
                 <div className="container">
-                    <div className="title">
+                    <header className="title">
                         <h1 className="ui center aligned header">Poker Game
                             <div className="sub header">Thanks to <a target="_blank" href="https://facebook.github.io/react/">React</a> and <a target="_blank" href="http://semantic-ui.com/">Semantic-UI</a></div>
                         </h1>
-                    </div>
-                    <div className="left">
+                    </header>
+                    <aside className="left">
                         <div className="ui vertical menu">
                             <div className={`item ${state.times === 250 ? 'blink' : ''}`}>同花顺<div className="ui teal label">250</div></div>
                             <div className={`item ${state.times === 60 ? 'blink' : ''}`}>四条<div className="ui teal label">60</div></div>
@@ -373,8 +373,8 @@ const Poker = React.createClass({
                             <div className={`item ${state.times === 2 ? 'blink' : ''}`}>两对<div className="ui teal label">2</div></div>
                             <div className={`item ${state.times === 1 ? 'blink' : ''}`}>大于8一对<div className="ui teal label">1</div></div>
                         </div>
-                    </div>
-                    <div className="right">
+                    </aside>
+                    <section className="right">
                         <div className="top">
                             <div className="ui form">
                                 <div className="fields">
@@ -467,7 +467,7 @@ const Poker = React.createClass({
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </section>
                 </div>
                 {state.help ?
                     <ReactCSSTransitionGroup transitionName="help" transitionAppear={true} transitionAppearTimeout={500} transitionEnter={false} transitionLeave={false}>
