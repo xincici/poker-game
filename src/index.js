@@ -295,9 +295,9 @@ const Poker = React.createClass({
         }, 250);
     },
     getOneShuffleCard() {
-        let ran = parseInt(Math.floor(Math.random() * 51));
+        let ran = parseInt(Math.floor(Math.random() * 52));
         while(this.state.cards.indexOf(ALLCARDS[ran]) >= 0){
-            ran = parseInt(Math.floor(Math.random() * 51));
+            ran = parseInt(Math.floor(Math.random() * 52));
         }
         return ALLCARDS[ran];
     },
