@@ -104,8 +104,17 @@
                 .random-number{
                     margin-right: 20px;
                     display: inline-block;
-                    width: 50px;
+                    height: 40px;
                     text-align: center;
+                    vertical-align: middle;
+                    .card{
+                        display: inline-block;
+                        width: 30px;
+                        height: 38px;
+                        margin: 1px;
+                        border-radius: 12px;
+                        border: 1px solid #8a8a8a;
+                    }
                 }
                 .random-result{
                     color : #21BA45;

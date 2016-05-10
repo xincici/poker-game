@@ -49,7 +49,7 @@ const Poker = React.createClass({
             gaming : false,
             times : 0,
             text : null,
-            random : 0,
+            random : '',
             randomResult : '',
             waiting : false,
             help : !str,
@@ -120,7 +120,7 @@ const Poker = React.createClass({
             gaming : false,
             times : 0,
             text : null,
-            random : 0,
+            random : '',
             randomResult : '',
             waiting : false
         }, () => {
@@ -133,31 +133,52 @@ const Poker = React.createClass({
     },
     clearRandom() {
         this.setState({
-            random : 0,
+            random : '',
             randomResult : ''
         });
     },
     startRandom() {
         this.timer = setInterval(() => {
-            let random = Math.ceil(Math.random() * 6);
+            let random = ALLCARDS[Math.floor(Math.random() * 52)];
             this.setState({
                 random
             });
         }, 125);
     },
     randomGuessBig() {
-        if(this.state.random >= 4){
+        let num = parseInt(this.state.random.split('-')[1]);
+        if(num >= 8){
             this.randomWin();
+        }else if(num == 7){
+            this.randomDraw();
         }else{
             this.randomLose();
         }
     },
     randomGuessSmall() {
-        if(this.state.random <= 3){
+        let num = parseInt(this.state.random.split('-')[1]);
+        if(num <= 6){
             this.randomWin();
+        }else if(num == 7){
+            this.randomDraw();
         }else{
             this.randomLose();
         }
+    },
+    randomDraw() {
+        this.clearTimer();
+        this.setState({
+            randomResult : 'Draw',
+            waiting : true
+        }, () => {
+            setTimeout(() => {
+                this.startRandom();
+                this.setState({
+                    randomResult : '',
+                    waiting : false
+                });
+            }, 1000);
+        });
     },
     randomWin() {
         this.clearTimer();
@@ -443,7 +464,12 @@ const Poker = React.createClass({
                                         {state.win === 0 ?
                                             null:
                                             <div>
-                                                <span className="random-number">{state.random}</span>
+                                                <span className="random-number">
+                                                    <span className={(function(){
+                                                        let r = this.state.random.split('-');
+                                                        return 'card ' + r[0] + '-card p-' + r[1];
+                                                    }.bind(this))()}></span>
+                                                </span>
                                                 <span className="random-result">{state.randomResult}</span>
                                             </div>
                                         }
@@ -479,7 +505,7 @@ const Poker = React.createClass({
                                     <div className="ui list">
                                         <div className="item"><i className="info circle icon olive"></i><div className="content">投注范围 1-100</div></div>
                                         <div className="item"><i className="info circle icon olive"></i><div className="content">牌型对应倍数见左侧栏</div></div>
-                                        <div className="item"><i className="info circle icon olive"></i><div className="content">猜大小数字 1、2、3 为小，4、5、6 为大</div></div>
+                                        <div className="item"><i className="info circle icon olive"></i><div className="content">猜大小牌点 1-6 为小，8-K 为大，7 为平局</div></div>
                                     </div>
                                 </div>
                                 <div className="actions">
