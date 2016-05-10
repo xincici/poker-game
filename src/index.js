@@ -39,6 +39,7 @@ const Poker = React.createClass({
             }
         }
         return{
+            preloading : true,
             total : json.total,
             bet : json.bet,
             win : 0,
@@ -58,6 +59,7 @@ const Poker = React.createClass({
         }
     },
     componentWillMount() {
+        this.loadedImages = 0;
         this.preLoadImages();
     },
     preLoadImages() {
@@ -65,7 +67,18 @@ const Poker = React.createClass({
         images.forEach((url) => {
             let img = new Image();
             img.src = url;
+            img.onload = () => {
+                this.loadOneImage();
+            }
         });
+    },
+    loadOneImage() {
+        this.loadedImages++;
+        if(this.loadedImages === 4){
+            this.setState({
+                preloading : false
+            });
+        }
     },
     inputTextChange(e) {
         let inputText = e.target.value;
@@ -273,7 +286,7 @@ const Poker = React.createClass({
                     if(times === 0){
                         setTimeout(() => {
                             this.setState({
-                                text : 'You Lose!!!'
+                                text : 'You Lose !!!'
                             }, () => {
                                 setTimeout(() => {
                                     this.setState({
@@ -287,7 +300,7 @@ const Poker = React.createClass({
                         }, 1200);
                     }else{
                         this.setState({
-                            text : 'You Win!!!',
+                            text : 'You Win !!!',
                             win : this.state.bet * times,
                             times : times
                         }, () => {
@@ -352,6 +365,13 @@ const Poker = React.createClass({
     },
     render() {
         const state = this.state;
+        if(state.preloading){
+            return(
+                <div className="ui active inverted dimmer" style={{background:'rgba(88,199,183,.75)'}}>
+                    <div className="ui text loader" style={{color:'#fff'}}>资源加载中，请稍候...</div>
+                </div>
+            )
+        }
         let cardsArr = [];
         A.forEach((index) => {
             let card = state.cards[index];
