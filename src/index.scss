@@ -142,6 +142,22 @@
 .p-13{ background-position: -225px -295px; }
 .back{ background-position: -450px -295px; }
 
+.random-number{
+    .p-1{ background-position: -3px -3px; }
+    .p-2{ background-position: -115px -3px; }
+    .p-3{ background-position: -228px -3px; }
+    .p-4{ background-position: -341px -3px; }
+    .p-5{ background-position: -453px -3px; }
+    .p-6{ background-position: -3px -150px; }
+    .p-7{ background-position: -115px -150px; }
+    .p-8{ background-position: -228px -150px; }
+    .p-9{ background-position: -341px -150px; }
+    .p-10{ background-position: -453px -150px; }
+    .p-11{ background-position: -3px -298px; }
+    .p-12{ background-position: -115px -298px; }
+    .p-13{ background-position: -228px -298px; }
+}
+
 @keyframes blink{
     from {
         opacity: 1;
