@@ -12,12 +12,16 @@ function numToStr(num){
     return num.toString().replace(/(\d{1,3})(?=(?:\d{3})+(?!\d))/g,'$1,');
 }
 const A = [0, 1, 2, 3, 4];
-const ALLCARDS = [
-    'a-1','a-2','a-3','a-4','a-5','a-6','a-7','a-8','a-9','a-10','a-11','a-12','a-13',
-    'b-1','b-2','b-3','b-4','b-5','b-6','b-7','b-8','b-9','b-10','b-11','b-12','b-13',
-    'c-1','c-2','c-3','c-4','c-5','c-6','c-7','c-8','c-9','c-10','c-11','c-12','c-13',
-    'd-1','d-2','d-3','d-4','d-5','d-6','d-7','d-8','d-9','d-10','d-11','d-12','d-13'
-];
+const ALLCARDS = (() => {
+    let tmp = [];
+    'a b c d'.split(' ').forEach((j) => {
+        '1 2 3 4 5 6 7 8 9 10 11 12 13'.split(' ').forEach((k) => {
+            tmp.push(j + '-' + k);
+        });
+    });
+    return tmp;
+}());
+
 const LSKEY = '__poker__storage';
 const Poker = React.createClass({
     getInitialState() {
@@ -71,6 +75,12 @@ const Poker = React.createClass({
                 this.loadOneImage();
             }
         });
+        /* in case of load timeout */
+        setTimeout(() => {
+            this.setState({
+                preloading : false
+            });
+        }, 4000);
     },
     loadOneImage() {
         this.loadedImages++;
@@ -368,7 +378,7 @@ const Poker = React.createClass({
         if(state.preloading){
             return(
                 <div className="ui active inverted dimmer" style={{background:'rgba(88,199,183,.75)'}}>
-                    <div className="ui text loader" style={{color:'#fff'}}>资源加载中，请稍候...</div>
+                    <div className="ui text loader" style={{color:'#fff', lineHeight: '20px'}}>页面加载完成<br />资源加载中，请稍候...</div>
                 </div>
             )
         }
