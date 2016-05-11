@@ -70,10 +70,11 @@ const Poker = React.createClass({
         let images = ['./img/heitao.jpg', './img/hongtao.jpg', './img/meihua.jpg', './img/fangkuai.jpg'];
         images.forEach((url) => {
             let img = new Image();
-            img.src = url;
             img.onload = () => {
+                img.onload = null;
                 this.loadOneImage();
             }
+            img.src = url;
         });
         /* in case of load timeout */
         setTimeout(() => {
