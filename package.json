@@ -4,7 +4,9 @@
   "description": "a poker game",
   "main": "src/index.js",
   "repository": "",
-  "scripts": {},
+  "scripts": {
+    "dev" : "gulp dev"
+  },
   "dependencies": {
     "lodash": "^4.0.1",
     "promise": "^7.1.1",
